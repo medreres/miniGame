@@ -105,11 +105,15 @@ function circRectsOverlap(x0, y0, w0, h0, cx, cy, r) {
 
 function drawNumberOfBallsAlive(balls) {
     ctx.save();
-    ctx.font = "30px Arial";
+    ctx.font = "20px Arial";
     if (balls.length === 0) {
-        ctx.fillText("YOU WIN!", 20, 30);
+        ctx.fillText("Game over!", 20, 30);
+    } else if (goodBallsEaten == numberOfGoodBalls) {
+        ctx.fillText(`You win! Final score: ${ wrongBallsEaten +  goodBallsEaten}`,20, 30);
     } else {
-        ctx.fillText(balls.length, 20, 30);
+        ctx.fillText("Balls still alive: " + balls.length, 210, 30);
+        ctx.fillText("Good Balls eaten: " + goodBallsEaten, 210, 50);
+        ctx.fillText("Wrong Balls eaten: " + wrongBallsEaten, 210, 70);
     }
     ctx.restore();
 }
@@ -125,8 +129,16 @@ function testCollisionWithPlayer(b, i) {
             b.y,
             b.radius
         )
-    )
+    ) {
+        if (b.color === colorToEat) {
+            // Yes, we remove it and increment the score
+            goodBallsEaten += 1;
+        } else {
+            wrongBallsEaten += 1;
+        }
+
         balls.splice(i, 1);
+    }
 }
 
 function moveAllBalls(ballArray) {
