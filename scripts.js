@@ -1,17 +1,23 @@
 var canvas, ctx, w, h;
 var balls = [];
-var initialNumberOfBalls;
+var initialNumberOfBalls = 1;
 var globalSpeedMutiplier = 1;
 var colorToEat = 'red';
 var wrongBallsEaten = goodBallsEaten = 0;
 var numberOfGoodBalls;
 var mousePos;
+var level = 1;
+const PAUSE = 5000;
+const gameRunning = 'gameRunning',
+    displayGameOverMenu = 'displayGameOverMenu';
+var gameState = displayGameOverMenu;
+
 
 var player = {
     x: 10,
     y: 10,
-    width: 10,
-    height: 10,
+    width: 30,
+    height: 30,
     color: "red"
 };
 
@@ -22,12 +28,47 @@ document.addEventListener("DOMContentLoaded", () => {
     h = canvas.height;
 
     ctx = canvas.getContext("2d");
-    startGame(10);
+
+    startGame(initialNumberOfBalls);
 
     canvas.addEventListener("mousemove", mouseMoved);
 
+    gameMenu();
+
+    detectSpacePressed();
+
     mainLoop();
 });
+
+function detectSpacePressed() {
+    document.addEventListener('keyup', (evt) => {
+        if (isGamePaused() && evt.key == ' ') {
+            // restartGame();
+            toggleGame();
+        }
+    })
+}
+
+function isGamePaused() {
+    return gameState === displayGameOverMenu;
+}
+
+function gameMenu() {
+    ctx.save();
+
+    ctx.font = '20px Arial';
+    ctx.fillText('Press \'Space\' to start game', h / 2 - 120, w / 2);
+    ctx.restore();
+}
+
+function startGameMenu() {
+    ctx.save();
+
+    ctx.
+
+
+    ctx.restore();
+}
 
 function mouseMoved(evt) {
     mousePos = getMousePos(canvas, evt);
@@ -66,16 +107,26 @@ function createBalls(n) {
     return ballsArray;
 }
 
+function toggleGame() {
+    if (gameState === gameRunning)
+        gameState = displayGameOverMenu;
+    else
+        gameState = gameRunning;
+}
+
 function mainLoop() {
-    ctx.clearRect(0, 0, w, h);
 
-    drawFilledRectangle(player);
-    drawAllBalls(balls);
+    if (!isGamePaused()) {
+        ctx.clearRect(0, 0, w, h);
 
-    moveAllBalls(balls);
+        drawPlayer(player);
+        drawAllBalls(balls);
 
-    movePlayerWithMouse();
-    drawNumberOfBallsAlive(balls);
+        moveAllBalls(balls);
+
+        movePlayerWithMouse();
+        drawNumberOfBallsAlive(balls);
+    }
 
     requestAnimationFrame(mainLoop);
 }
@@ -108,14 +159,29 @@ function drawNumberOfBallsAlive(balls) {
     ctx.font = "20px Arial";
     if (balls.length === 0) {
         ctx.fillText("Game over!", 20, 30);
+        
+        restartGame();
+        
+        toggleGame();
+
+        gameMenu();
     } else if (goodBallsEaten == numberOfGoodBalls) {
-        ctx.fillText(`You win! Final score: ${ wrongBallsEaten +  goodBallsEaten}`,20, 30);
+        ctx.fillText(`You win! Final score: ${ wrongBallsEaten +  goodBallsEaten}`, 20, 30);
     } else {
         ctx.fillText("Balls still alive: " + balls.length, 210, 30);
         ctx.fillText("Good Balls eaten: " + goodBallsEaten, 210, 50);
         ctx.fillText("Wrong Balls eaten: " + wrongBallsEaten, 210, 70);
+        ctx.fillText(`Level: ${level}`, 210, 90);
     }
     ctx.restore();
+}
+
+function restartGame() {
+    initialNumberOfBalls++;
+    level++;
+
+    //restart game
+    startGame(initialNumberOfBalls);
 }
 
 function testCollisionWithPlayer(b, i) {
@@ -149,15 +215,20 @@ function moveAllBalls(ballArray) {
     });
 }
 
-function drawFilledRectangle(r) {
+function drawPlayer(r) {
     ctx.save();
+
+    const playerImg = new Image();
+    playerImg.src = './resources/monster.png';
 
     ctx.translate(r.x - r.width / 2, r.y - r.height / 2);
 
-    ctx.fillStyle = r.color;
-    ctx.fillRect(0, 0, r.width, r.height);
-
+    // ctx.fillStyle = r.color;
+    // ctx.fillRect(0, 0, r.width, r.height);
+    ctx.drawImage(playerImg, 0, 0);
     ctx.restore();
+
+
 }
 
 function drawFilledCircle(c) {
