@@ -1,5 +1,10 @@
 canvas {
-  border: 1px solid black;
+  border: 5px outset #EB6946;
+  background-color: #D26E96;
+  width: 400px;
+  height: 400px;
+  margin-top: 5vh;
+  box-sizing: border-box;
 }
 
 canvas:hover {
@@ -8,5 +13,18 @@ canvas:hover {
 
 body {
   display: flex;
-  justify-content: center;
+  flex-flow: column nowrap;
+  align-items: center;
+  background-color: #FA8778;
+  height: 90vh;
+
+}
+
+#controls {
+  background-color: #B91841;
+  border: 5px inset #D26E96;
+  margin-top: 10px;
+  box-sizing: border-box;
+  padding: 10px;
+  color: white;
 }
