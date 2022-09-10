@@ -18,7 +18,6 @@ var player = {
     y: 10,
     width: 30,
     height: 30,
-    color: "red"
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -95,8 +94,8 @@ function createBalls(n) {
 
     for (let i = 0; i < n; i++) {
         let b = {
-            x: w / 2,
-            y: h / 2,
+            x: Math.round(Math.random() * h),
+            y: Math.round(Math.random() * w),
             radius: 5 + 30 * Math.random(),
             speedX: -5 + 10 * Math.random(),
             speedY: -5 + 10 * Math.random(),
@@ -286,10 +285,6 @@ function changeNBalls(n) {
 function changeColorToEar(color) {
     colorToEat = color;
     startGame(initialNumberOfBalls);
-}
-
-function changePlayerColor(color) {
-    player.color = color;
 }
 
 function changeBallSpeed(coef) {
