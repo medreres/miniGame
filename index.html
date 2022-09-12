@@ -5,10 +5,13 @@
   <meta charset="utf-8">
   <title>Mini Game</title>
   <script src="./scripts.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/1.1.28/howler.min.js"></script>
   <link rel="stylesheet" href="./styles.css">
 </head>
 
 <body>
+  <audio src="https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/sounds/humbug.mp3" id="audioPlayer">
+  </audio>
   <div id='controls'>
     <label for='nBalls'>Number of balls: </label>
     <input type=number min=1 max=30 value=10 id=nBalls oninput=changeNBalls(this.value); />

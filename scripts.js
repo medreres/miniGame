@@ -36,13 +36,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
     detectSpacePressed();
 
-    mainLoop();
+    ballEatenSound = new Howl({
+        urls: ['https://mainline.i3s.unice.fr/mooc/SkywardBound/assets/sounds/plop.mp3'],
+        onload: function () {
+            // start the animation
+            mainLoop();
+        }
+    });
 });
+
+function playBackgroundMusic() {
+    let audioPlayer = document.querySelector("#audioPlayer");
+    audioPlayer.play();
+}
+
+function pausebackgroundMusic() {
+    let audioPlayer = document.querySelector("#audioPlayer");
+    audioPlayer.pause();
+}
 
 function detectSpacePressed() {
     document.addEventListener('keyup', (evt) => {
         if (isGamePaused() && evt.key == ' ') {
             // restartGame();
+            toggleGame();
+        }
+    })
+
+    document.addEventListener('click', (evt) => {
+        if (isGamePaused() && evt.target == '[object HTMLCanvasElement]') {
             toggleGame();
         }
     })
@@ -56,15 +78,12 @@ function gameMenu() {
     ctx.save();
 
     ctx.font = '20px Arial';
-    ctx.fillText('Press \'Space\' to start game', h / 2 - 120, w / 2);
+    ctx.fillText('Press \'Space\' or click here to start game', h / 2 - 180, w / 2);
     ctx.restore();
 }
 
 function startGameMenu() {
     ctx.save();
-
-    ctx.
-
 
     ctx.restore();
 }
@@ -107,10 +126,14 @@ function createBalls(n) {
 }
 
 function toggleGame() {
-    if (gameState === gameRunning)
+    if (gameState === gameRunning) {
+        document.querySelector('canvas').style.cursor = 'pointer';
         gameState = displayGameOverMenu;
-    else
+
+    } else {
+        document.querySelector('canvas').style.cursor = 'none';
         gameState = gameRunning;
+    }
 }
 
 function mainLoop() {
@@ -158,9 +181,9 @@ function drawNumberOfBallsAlive(balls) {
     ctx.font = "20px Arial";
     if (balls.length === 0) {
         ctx.fillText("Game over!", 20, 30);
-        
+
         restartGame();
-        
+
         toggleGame();
 
         gameMenu();
@@ -195,6 +218,7 @@ function testCollisionWithPlayer(b, i) {
             b.radius
         )
     ) {
+        ballEatenSound.play();
         if (b.color === colorToEat) {
             // Yes, we remove it and increment the score
             goodBallsEaten += 1;
