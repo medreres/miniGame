@@ -18,6 +18,12 @@ var player = {
     y: 10,
     width: 30,
     height: 30,
+    move: function() {
+        if (mousePos !== undefined) {
+            this.x = mousePos.x;
+            this.y = mousePos.y;
+        }
+    }
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -146,7 +152,8 @@ function mainLoop() {
 
         moveAllBalls(balls);
 
-        movePlayerWithMouse();
+        player.move();
+        // movePlayerWithMouse();
         drawNumberOfBallsAlive(balls);
     }
 
